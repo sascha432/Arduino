@@ -178,7 +178,7 @@ size_t Print::print(const Printable& x) {
 }
 
 size_t Print::println(void) {
-    return write('\r') + write('\n');
+    return print("\r\n");
 }
 
 size_t Print::println(const __FlashStringHelper* ifsh) {

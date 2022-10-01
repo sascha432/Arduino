@@ -126,6 +126,16 @@ inline int esp_get_cpu_freq_mhz()
 // be linked in automatically.  Otherwise, the default PWM locked version will be used.
 void enablePhaseLockedWaveform(void);
 
+// Determine when the sketch runs on ESP8285
+#if !defined(CORE_MOCK)
+bool __attribute__((const, nothrow)) esp_is_8285();
+#else
+inline bool esp_is_8285()
+{
+    return false;
+}
+#endif
+
 #ifdef __cplusplus
 }
 #endif

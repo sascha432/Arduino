@@ -1,10 +1,6 @@
 Arduino core for ESP8266 WiFi chip
 ===========================================
 
-# Modifications
-
-- Optimized WString class and additional functionality
-
 # Quick links
 
 - [Latest release documentation](https://arduino-esp8266.readthedocs.io/en/3.0.2/)
@@ -25,14 +21,14 @@ ESP8266 Arduino core comes with libraries to communicate over WiFi using TCP and
   - [Building with make](#building-with-make)
 - [Documentation](#documentation)
 - [Issues and support](#issues-and-support)
-- [Contributing](#contributing)
-- [License and credits](#license-and-credits)
+- [Contributing](#contributing)  
+- [License and credits](#license-and-credits)   
 
 ### Installing with Boards Manager
 
 Starting with 1.6.4, Arduino allows installation of third-party platform packages using Boards Manager. We have packages available for Windows, Mac OS, and Linux (32 and 64 bit).
 
-- Install the current upstream Arduino IDE at the 1.8.9 level or later. The current version is on the [Arduino website](https://www.arduino.cc/en/main/software).
+- Install the current upstream Arduino IDE at the 1.8.9 level or later. The current version is on the [Arduino website](https://www.arduino.cc/en/software).
 - Start Arduino and open the Preferences window.
 - Enter ```https://arduino.esp8266.com/stable/package_esp8266com_index.json``` into the *File>Preferences>Additional Boards Manager URLs* field of the Arduino IDE. You can add multiple URLs, separating them with commas.
 - Open Boards Manager from Tools > Board menu and install *esp8266* platform (and don't forget to select your ESP8266 board from Tools > Board menu after installation).
@@ -47,7 +43,7 @@ Documentation: [https://arduino-esp8266.readthedocs.io/en/3.0.2/](https://arduin
 
 Also known as latest git or master branch.
 
-- Install the current upstream Arduino IDE at the 1.8 level or later. The current version is on the [Arduino website](https://www.arduino.cc/en/main/software).
+- Install the current upstream Arduino IDE at the 1.8 level or later. The current version is on the [Arduino website](https://www.arduino.cc/en/software).
 - Follow the [instructions in the documentation](https://arduino-esp8266.readthedocs.io/en/latest/installing.html#using-git-version).
 
 ### Using PlatformIO
@@ -138,4 +134,4 @@ ESP8266 core files are licensed under LGPL.
 
 [Serial Monitor Arduino IDE plugin](https://github.com/mytrain/arduino-esp8266-serial-plugin) Original discussion [here](https://github.com/esp8266/Arduino/issues/1360), quick download [there](http://mytrain.fr/cms//images/mytrain/private/ESP8266SM.v3.zip).
 
-[FTP Client/Server Library](https://github.com/dplasa/FTPClientServer)
+[FTP Client/Server Library](https://github.com/dplasa/FTPClientServer) 

@@ -20,8 +20,6 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#define LWIP_INTERNAL
-
 #include <list>
 #include <errno.h>
 #include <algorithm>
@@ -44,7 +42,6 @@ extern "C" {
 #include "lwip/netif.h"
 #include <include/ClientContext.h>
 #include "c_types.h"
-#include "coredecls.h"
 #include <mmu_iram.h>
 #include <umm_malloc/umm_malloc.h>
 #include <umm_malloc/umm_heap_select.h>
