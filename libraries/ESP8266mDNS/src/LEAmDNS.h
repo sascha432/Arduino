@@ -503,7 +503,7 @@ namespace MDNSImplementation
             };
             using KeyValueMap = std::map<const char*, const char*, CompareKey>;
 
-        protected:
+        public:
             MDNSResponder&                   p_pMDNSResponder;
             MDNSResponder::hMDNSServiceQuery p_hServiceQuery;
             uint32_t                         p_u32AnswerIndex;
@@ -1281,6 +1281,8 @@ namespace MDNSImplementation
         bool _udpDump(bool p_bMovePointer = false);
         bool _udpDump(unsigned p_uOffset, unsigned p_uLength);
 #endif
+
+public:
 
         /* READ/WRITE MDNS STRUCTS */
         bool _readMDNSMsgHeader(stcMDNS_MsgHeader& p_rMsgHeader);
