@@ -10,6 +10,11 @@
 			"string": "cpp",
 			"unordered_map": "cpp",
 			"string_view": "cpp"
+		},
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#02314C",
+			"titleBar.activeBackground": "#03446A",
+			"titleBar.activeForeground": "#F7FCFF"
 		}
 	}
 }
