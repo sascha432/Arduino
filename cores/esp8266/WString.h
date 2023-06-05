@@ -40,7 +40,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <pgmspace.h>
-#include "KFCBaseLibrary/include/misc_wstring.h"
+#include "misc_wstring.h"
 #endif
 
  // an abstract class used as a means to proide a unique pointer type
