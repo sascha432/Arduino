@@ -703,6 +703,10 @@ class String {
             auto findLength = str.length();
             return _lastIndexOf(str.buffer(), fromIndex - findLength, findLength);
         }
+        int lastIndexOf(const char *str, unsigned int fromIndex) const {
+            auto findLength = strlen(str);
+            return _lastIndexOf(str, fromIndex - findLength, findLength);
+        }
         int lastIndexOf(const __FlashStringHelper *str, unsigned int fromIndex) const {
             auto findLength = strlen_P(reinterpret_cast<PGM_P>(str));
             return _lastIndexOf_P(reinterpret_cast<PGM_P>(str), fromIndex - findLength, findLength);
