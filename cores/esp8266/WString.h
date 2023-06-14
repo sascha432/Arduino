@@ -585,8 +585,8 @@ class String {
             if (!find || !findLength || ((len = length()) == 0) || (fromIndex + findLength >= len)) {
                 return -1;
             }
-            auto ptr = buffer();
-            auto idxPtr = stristr_P(const_cast<char *>(ptr) + fromIndex, find, findLength);
+            auto ptr = wbuffer();
+            auto idxPtr = stristr_P(ptr + fromIndex, find, findLength);
             if (!idxPtr) {
                 return -1;
             }

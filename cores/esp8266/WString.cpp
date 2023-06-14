@@ -612,7 +612,7 @@ int String::_lastIndexOf_P(PGM_P find, size_t fromIndex, size_t findLen) const
     // else if (fromIndex < findLen || fromIndex > len) {
     //     return -1;
     // }
-    auto ptr = __strrstr_P(const_cast<char *>(buffer()), fromIndex + findLen, find, findLen);
+    auto ptr = __strrstr_P(wbuffer(), fromIndex + findLen, find, findLen);
     if (!ptr) {
         return -1;
     }
@@ -633,7 +633,7 @@ int String::_lastIndexOf(const char *find, size_t fromIndex, size_t findLen) con
     // else if (fromIndex < findLen || fromIndex > len) {
     //     return -1;
     // }
-    auto ptr = __strrstr(const_cast<char *>(buffer()), fromIndex + findLen, find, findLen);
+    auto ptr = __strrstr(wbuffer(), fromIndex + findLen, find, findLen);
     if (!ptr) {
         return -1;
     }
@@ -724,7 +724,7 @@ bool String::_replace(PGM_P find, size_t findLen, PGM_P replace, size_t replaceL
         //TODO
         // int index = len() - 1; // this will not replace strings that are longer than the original string
         // could be an issue in the method lastIndexOf()
-        while (index >= 0 && (index = lastIndexOf(find, index)) >= 0) {
+        while (index >= 0 && (index = lastIndexOf(reinterpret_cast<const __FlashStringHelper *>(find), index)) >= 0) {
             readFrom = wbuffer() + index + findLen;
             memmove(readFrom + diff, readFrom, len() - (readFrom - buffer()));
             int newLen = len() + diff;
