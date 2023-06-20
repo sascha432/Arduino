@@ -241,6 +241,7 @@ public:
                 DEBUGV("lfs_format, lfs_setattr 't': rc=%d\n", rc);
                 return false;
             }
+
             lfs_unmount(&_lfs);
             _mounted = false;
         }

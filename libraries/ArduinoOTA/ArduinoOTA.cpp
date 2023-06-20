@@ -100,8 +100,8 @@ void ArduinoOTAClass::begin(bool useMDNS) {
   _useMDNS = useMDNS;
 
   if (!_hostname.length()) {
-    char tmp[16];
-    snprintf_P(tmp, sizeof(tmp), PSTR("esp8266-%06x"), ESP.getChipId());
+    char tmp[15];
+    sprintf(tmp, "esp8266-%06x", ESP.getChipId());
     _hostname = tmp;
   }
   if (!_port) {
@@ -119,7 +119,7 @@ void ArduinoOTAClass::begin(bool useMDNS) {
   if(!_udp_ota->listen(IP_ADDR_ANY, _port))
     return;
   _udp_ota->onRx(std::bind(&ArduinoOTAClass::_onRx, this));
-
+  
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_MDNS)
   if(_useMDNS) {
     MDNS.begin(_hostname.c_str());
@@ -195,8 +195,8 @@ void ArduinoOTAClass::_onRx(){
       nonce_md5.calculate();
       _nonce = nonce_md5.toString();
 
-      char auth_req[40];
-      snprintf_P(auth_req, sizeof(auth_req), PSTR("AUTH %s"), _nonce.c_str());
+      char auth_req[38];
+      sprintf(auth_req, "AUTH %s", _nonce.c_str());
       _udp_ota->append((const char *)auth_req, strlen(auth_req));
       _udp_ota->send(ota_ip, _ota_udp_port);
       _state = OTA_WAITAUTH;
@@ -218,7 +218,7 @@ void ArduinoOTAClass::_onRx(){
       return;
     }
 
-    String challenge = _password + ':' + _nonce + ':' + cnonce;
+    String challenge = _password + ':' + String(_nonce) + ':' + cnonce;
     MD5Builder _challengemd5;
     _challengemd5.begin();
     _challengemd5.add(challenge);
@@ -229,7 +229,7 @@ void ArduinoOTAClass::_onRx(){
     if(result.equalsConstantTime(response)) {
       _state = OTA_RUNUPDATE;
     } else {
-      _udp_ota->append(String(F("Authentication Failed")).c_str(), 21);
+      _udp_ota->append("Authentication Failed", 21);
       _udp_ota->send(ota_ip, _ota_udp_port);
       if (_error_callback) _error_callback(OTA_AUTH_ERROR);
       _state = OTA_IDLE;
@@ -249,7 +249,7 @@ void ArduinoOTAClass::_runUpdate() {
     if (_error_callback) {
       _error_callback(OTA_BEGIN_ERROR);
     }
-
+    
     StreamString ss;
     Update.printError(ss);
     _udp_ota->append("ERR: ", 5);
@@ -316,7 +316,7 @@ void ArduinoOTAClass::_runUpdate() {
     // Ensure last count packet has been sent out and not combined with the final OK
     client.flush();
     delay(1000);
-    client.print(F("OK"));
+    client.print("OK");
     client.flush();
     delay(1000);
     client.stop();
@@ -359,7 +359,7 @@ void ArduinoOTAClass::end() {
     _state = OTA_IDLE;
     #ifdef OTA_DEBUG
     OTA_DEBUG.printf("OTA server stopped.\n");
-    #endif
+    #endif    
 }
 //this needs to be called in the loop()
 void ArduinoOTAClass::handle() {

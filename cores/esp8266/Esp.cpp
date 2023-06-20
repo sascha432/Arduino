@@ -219,13 +219,15 @@ uint16_t EspClass::getVcc(void)
 
 uint32_t EspClass::getFreeHeap(void)
 {
-    return system_get_free_heap_size();
+    return umm_free_heap_size_lw();
 }
 
+#if defined(UMM_INFO)
 uint32_t EspClass::getMaxFreeBlockSize(void)
 {
     return umm_max_block_size();
 }
+#endif
 
 uint32_t EspClass::getFreeContStack()
 {
@@ -469,7 +471,7 @@ bool EspClass::checkFlashCRC() {
     uint32_t firstPart = (uintptr_t)&__crc_len - 0x40200000; // How many bytes to check before the 1st CRC val
 
     // Start the checksum
-    uint32_t crc = crc32((const void*)0x40200000, firstPart, 0xffffffff);
+    uint32_t crc = crc32((const void*)0x40200000, firstPart);
     // Pretend the 2 words of crc/len are zero to be idempotent
     crc = crc32(z, 8, crc);
     // Finish the CRC calculation over the rest of flash

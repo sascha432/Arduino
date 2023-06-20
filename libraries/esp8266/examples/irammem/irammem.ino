@@ -328,6 +328,7 @@ uint32_t cyclesToWrite_nKx8_viaInline(int n, unsigned char *x) {
   return ESP.getCycleCount() - b;
 }
 
+
 bool perfTest_nK(int nK, uint32_t *mem, uint32_t *imem) {
   uint32_t res, verify_res;
   uint32_t t;

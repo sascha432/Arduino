@@ -45,6 +45,7 @@ public:
         _sync(::getDefaultPrivateGlobalSyncValue()), _sock(sock)
     {
     }
+
     err_t abort()
     {
         if (_sock >= 0)

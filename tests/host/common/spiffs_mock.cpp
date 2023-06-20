@@ -81,6 +81,7 @@ void SpiffsMock::load()
         fprintf(stderr, "SPIFFS: loading '%s': %s\n", m_storage.c_str(), strerror(errno));
         return;
     }
+
     off_t flen = lseek(fs, 0, SEEK_END);
     if (flen == (off_t)-1)
     {

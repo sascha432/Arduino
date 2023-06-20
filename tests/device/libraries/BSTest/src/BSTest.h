@@ -105,6 +105,7 @@ template<typename IO>
 class Runner
 {
     typedef Runner<IO> Tself;
+
 public:
     Runner(IO& io) : m_io(io)
     {

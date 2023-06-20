@@ -503,9 +503,10 @@ namespace MDNSImplementation
             };
             using KeyValueMap = std::map<const char*, const char*, CompareKey>;
 
-        public:
+        protected:
             MDNSResponder&                   p_pMDNSResponder;
             MDNSResponder::hMDNSServiceQuery p_hServiceQuery;
+        public:
             uint32_t                         p_u32AnswerIndex;
             KeyValueMap                      keyValueMap;
 
@@ -1174,6 +1175,8 @@ namespace MDNSImplementation
         stcMDNSServiceQuery*              m_pServiceQueries;
         MDNSDynamicServiceTxtCallbackFunc m_fnServiceTxtCallback;
         stcProbeInformation               m_HostProbeInformation;
+        bool                              m_bLwipCb;
+        bool                              m_bRestarting;
 
         /** CONTROL **/
         /* MAINTENANCE */
@@ -1282,8 +1285,6 @@ namespace MDNSImplementation
         bool _udpDump(unsigned p_uOffset, unsigned p_uLength);
 #endif
 
-public:
-
         /* READ/WRITE MDNS STRUCTS */
         bool _readMDNSMsgHeader(stcMDNS_MsgHeader& p_rMsgHeader);
 
@@ -1371,6 +1372,7 @@ public:
         stcMDNSServiceTxt* _addServiceTxt(stcMDNSService* p_pService, const char* p_pcKey,
                                           const char* p_pcValue, bool p_bTemp);
 
+    public:
         stcMDNSServiceTxt* _answerKeyValue(const hMDNSServiceQuery p_hServiceQuery,
                                            const uint32_t          p_u32AnswerIndex);
 

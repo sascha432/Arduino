@@ -56,6 +56,7 @@
  * Higher density PSRAM (ESP-PSRAM64H/etc.) works as well, but may be too
    large to effectively use with UMM.  Only 256K is available vial malloc,
    but addresses above 256K do work and can be used for fixed buffers.
+
 */
 
 #ifdef MMU_EXTERNAL_HEAP

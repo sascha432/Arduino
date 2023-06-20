@@ -99,21 +99,21 @@ static const char _ssdp_schema_template[] PROGMEM =
   "<manufacturerURL>%s</manufacturerURL>"
   "<UDN>%s</UDN>"
   "</device>"
- //"<iconList>"
- //"<icon>"
- //"<mimetype>image/png</mimetype>"
- //"<height>48</height>"
- //"<width>48</width>"
- //"<depth>24</depth>"
- //"<url>icon48.png</url>"
- //"</icon>"
- //"<icon>"
- //"<mimetype>image/png</mimetype>"
- //"<height>120</height>"
- //"<width>120</width>"
- //"<depth>24</depth>"
- //"<url>icon120.png</url>"
- //"</icon>"
+ //"<iconList>"	
+ //"<icon>"	
+ //"<mimetype>image/png</mimetype>"	
+ //"<height>48</height>"	
+ //"<width>48</width>"	
+ //"<depth>24</depth>"	
+ //"<url>icon48.png</url>"	
+ //"</icon>"	
+ //"<icon>"	
+ //"<mimetype>image/png</mimetype>"	
+ //"<height>120</height>"	
+ //"<width>120</width>"	
+ //"<depth>24</depth>"	
+ //"<url>icon120.png</url>"	 
+ //"</icon>"	
  //"</iconList>"
   "</root>\r\n"
   "\r\n";
@@ -128,7 +128,7 @@ SSDPClass::SSDPClass()
 {
   _uuid[0] = '\0';
   _modelNumber[0] = '\0';
-  sprintf_P(_deviceType, PSTR("urn:schemas-upnp-org:device:Basic:1"));
+  sprintf(_deviceType, "urn:schemas-upnp-org:device:Basic:1");
   _friendlyName[0] = '\0';
   _presentationURL[0] = '\0';
   _serialNumber[0] = '\0';
@@ -136,7 +136,7 @@ SSDPClass::SSDPClass()
   _modelURL[0] = '\0';
   _manufacturer[0] = '\0';
   _manufacturerURL[0] = '\0';
-  sprintf_P(_schemaURL, PSTR("ssdp/schema.xml"));
+  sprintf(_schemaURL, "ssdp/schema.xml");
 }
 
 SSDPClass::~SSDPClass() {
@@ -145,17 +145,17 @@ SSDPClass::~SSDPClass() {
 
 bool SSDPClass::begin() {
   end();
-
+  
   _pending = false;
   _st_is_uuid = false;
-  if (!*_uuid) {
+  if (strcmp(_uuid,"") == 0) {
 	uint32_t chipId = ESP.getChipId();
 	sprintf_P(_uuid, PSTR("uuid:38323636-4558-4dda-9188-cda0e6%02x%02x%02x"),
   (uint16_t) ((chipId >> 16) & 0xff),
 	(uint16_t) ((chipId >>  8) & 0xff),
 	(uint16_t)   chipId        & 0xff);
   }
-
+  
 #ifdef DEBUG_SSDP
   DEBUG_SSDP.printf("SSDP UUID: %s\n", (char *)_uuid);
 #endif
@@ -233,7 +233,7 @@ void SSDPClass::_send(ssdp_method_t method) {
                        _modelName,
                        _modelNumber,
                        _uuid,
-                       (method == NONE) ? PSTR("ST") : PSTR("NT"),
+                       (method == NONE) ? "ST" : "NT",
                        (_st_is_uuid) ? _uuid : _deviceType,
                        ip.toString().c_str(), _port, _schemaURL
                       );
@@ -309,7 +309,7 @@ void SSDPClass::_update() {
       switch (state) {
         case METHOD:
           if (c == ' ') {
-            if (strcmp_P(buffer, PSTR("M-SEARCH")) == 0) method = SEARCH;
+            if (strcmp(buffer, "M-SEARCH") == 0) method = SEARCH;
 
             if (method == NONE) state = ABORT;
             else state = URI;
@@ -322,7 +322,7 @@ void SSDPClass::_update() {
           break;
         case URI:
           if (c == ' ') {
-            if (strcmp_P(buffer, PSTR("*")) == 0) state = ABORT;
+            if (strcmp(buffer, "*")) state = ABORT;
             else state = PROTO;
             cursor = 0;
           } else if (cursor < SSDP_URI_SIZE - 1) {
@@ -361,7 +361,7 @@ void SSDPClass::_update() {
 #endif
                 break;
               case ST:
-                if (strcmp_P(buffer, PSTR("ssdp:all"))) {
+                if (strcmp(buffer, "ssdp:all")) {
                   state = ABORT;
 #ifdef DEBUG_SSDP
                   DEBUG_SSDP.printf("REJECT: %s\n", (char *)buffer);
@@ -395,9 +395,9 @@ void SSDPClass::_update() {
             }
           } else if (c != '\r' && c != '\n') {
             if (header == START) {
-              if (strncmp_P(buffer, PSTR("MA"), 2) == 0) header = MAN;
-              else if (strcmp_P(buffer, PSTR("ST")) == 0) header = ST;
-              else if (strcmp_P(buffer, PSTR("MX")) == 0) header = MX;
+              if (strncmp(buffer, "MA", 2) == 0) header = MAN;
+              else if (strcmp(buffer, "ST") == 0) header = ST;
+              else if (strcmp(buffer, "MX") == 0) header = MX;
             }
 
             if (cursor < SSDP_BUFFER_SIZE - 1) {
@@ -442,7 +442,7 @@ void SSDPClass::setDeviceType(const char *deviceType) {
 }
 
 void SSDPClass::setUUID(const char *uuid) {
-  snprintf_P(_uuid, sizeof(_uuid), PSTR("uuid:%s"), uuid);
+  snprintf_P(_uuid, sizeof(_uuid), PSTR("uuid:%s"), uuid);  
 }
 
 void SSDPClass::setName(const char *name) {
@@ -458,7 +458,7 @@ void SSDPClass::setSerialNumber(const char *serialNumber) {
 }
 
 void SSDPClass::setSerialNumber(const uint32_t serialNumber) {
-  snprintf_P(_serialNumber, sizeof(uint32_t) * 2 + 1, PSTR("%08X"), serialNumber);
+  snprintf(_serialNumber, sizeof(uint32_t) * 2 + 1, "%08X", serialNumber);
 }
 
 void SSDPClass::setModelName(const char *name) {
