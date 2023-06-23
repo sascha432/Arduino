@@ -681,27 +681,27 @@ bool String::replace(char find, char replace)
 }
 
 // TODO write test cases to verify this is working correctly
-bool String::_replace(PGM_P find, size_t findLen, PGM_P replace, size_t replaceLen)
+bool String::_replace(PGM_P findStr, size_t findLen, PGM_P replaceStr, size_t replaceLen)
 {
-    if (length() == 0 || findLen == 0 || !find) {
+    if (length() == 0 || findLen == 0 || !findStr) {
         return false;
     }
     int diff = replaceLen - findLen;
     char *readFrom = wbuffer();
     char *foundAt;
     if (diff == 0) {
-        while ((foundAt = strstr_P(readFrom, find)) != nullptr) {
-            memmove_P(foundAt, replace, replaceLen);
+        while ((foundAt = strstr_P(readFrom, findStr)) != nullptr) {
+            memmove_P(foundAt, replaceStr, replaceLen);
             readFrom = foundAt + replaceLen;
         }
     }
     else if (diff < 0) {
         char *writeTo = wbuffer();
-        while ((foundAt = strstr_P(readFrom, find)) != nullptr) {
+        while ((foundAt = strstr_P(readFrom, findStr)) != nullptr) {
             unsigned int n = foundAt - readFrom;
             memmove(writeTo, readFrom, n);
             writeTo += n;
-            memmove_P(writeTo, replace, replaceLen);
+            memmove_P(writeTo, replaceStr, replaceLen);
             writeTo += replaceLen;
             readFrom = foundAt + findLen;
             setLen(len() + diff);
@@ -710,25 +710,22 @@ bool String::_replace(PGM_P find, size_t findLen, PGM_P replace, size_t replaceL
     }
     else {
         unsigned int size = len(); // compute size needed for result
-        while ((foundAt = strstr_P(readFrom, find)) != nullptr) {
+        while ((foundAt = strstr_P(readFrom, findStr)) != nullptr) {
             readFrom = foundAt + findLen;
             size += diff;
         }
         if (size == len()) {
-            return true;
+            return false;
         }
         if (size > capacity() && !changeBuffer(size)) {
             return false;
         }
-        int index = len();
-        //TODO
-        // int index = len() - 1; // this will not replace strings that are longer than the original string
-        // could be an issue in the method lastIndexOf()
-        while (index >= 0 && (index = lastIndexOf(reinterpret_cast<const __FlashStringHelper *>(find), index)) >= 0) {
+        int index = len() - 1;
+        while (index >= 0 && (index = _lastIndexOf_P(findStr, index, findLen)) >= 0) {
             readFrom = wbuffer() + index + findLen;
             memmove(readFrom + diff, readFrom, len() - (readFrom - buffer()));
             int newLen = len() + diff;
-            memmove_P(wbuffer() + index, replace, replaceLen);
+            memmove_P(wbuffer() + index, replaceStr, replaceLen);
             setLen(newLen);
             wbuffer()[newLen] = 0;
             index--;

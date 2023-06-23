@@ -462,22 +462,29 @@ class String {
         //
 
         inline __attribute__((__always_inline__))
-            unsigned char _endsWith(const char *suffix, size_t suffixLen) const {
+        unsigned char _endsWith(const char *suffix, size_t suffixLen) const 
+        {
             size_t len;
             return suffixLen && ((len = length()) >= suffixLen) && !strcmp(buffer() + len - suffixLen, suffix);
         }
+
         inline __attribute__((__always_inline__))
-            unsigned char _endsWith_P(PGM_P suffix, size_t suffixLen) const {
+        unsigned char _endsWith_P(PGM_P suffix, size_t suffixLen) const 
+        {
             size_t len;
             return suffixLen && ((len = length()) >= suffixLen) && !strcmp_P(buffer() + len - suffixLen, suffix);
         }
+
         inline __attribute__((__always_inline__))
-            unsigned char _endsWithIgnoreCase(const char *suffix, size_t suffixLen) const {
+        unsigned char _endsWithIgnoreCase(const char *suffix, size_t suffixLen) const 
+        {
             size_t len;
             return suffixLen && ((len = length()) >= suffixLen) && !strcasecmp(buffer() + len - suffixLen, suffix);
         }
+
         inline __attribute__((__always_inline__))
-            unsigned char _endsWithIgnoreCase_P(PGM_P suffix, size_t suffixLen) const {
+        unsigned char _endsWithIgnoreCase_P(PGM_P suffix, size_t suffixLen) const 
+        {
             size_t len;
             return suffixLen && ((len = length()) >= suffixLen) && !strcasecmp_P(buffer() + len - suffixLen, suffix);
         }
@@ -500,7 +507,7 @@ class String {
             return suffix && _endsWith(suffix, strlen(suffix));
         }
         unsigned char endsWith(const __FlashStringHelper *suffix) const {
-            return suffix && _endsWith_P(reinterpret_cast<PGM_P>(suffix), strlen_P(reinterpret_cast<PGM_P>(suffix)));
+            return suffix && _endsWith_P(reinterpret_cast<PGM_P>(suffix), _strlen_F(suffix));
         }
 
         //
@@ -518,24 +525,18 @@ class String {
             return suffix && _endsWithIgnoreCase(suffix, strlen(suffix));
         }
         unsigned char endsWithIgnoreCase(const __FlashStringHelper *suffix) const {
-            return suffix && _endsWithIgnoreCase_P(reinterpret_cast<PGM_P>(suffix), strlen_P(reinterpret_cast<PGM_P>(suffix)));
+            return suffix && _endsWithIgnoreCase_P(reinterpret_cast<PGM_P>(suffix), _strlen_F(suffix));
         }
-
-
-        // // search
-        // int indexOf(char ch, unsigned int fromIndex = 0) const;
-        // int indexOf(const char *str, unsigned int fromIndex = 0) const;
-        // int indexOf(const __FlashStringHelper *str, unsigned int fromIndex = 0) const {
-        //     return indexOf((const char*)str, fromIndex);
-        // }
-        // int indexOf(const String &str, unsigned int fromIndex = 0) const;
-        // int lastIndexOf(char ch) const;
-        // int lastIndexOf(char ch, unsigned int fromIndex) const;
-        // int lastIndexOf(const String &str) const;
-        // int lastIndexOf(const String &str, unsigned int fromIndex) const;
 
     // internal search functions
     protected:
+
+        inline __attribute__((__always_inline__))
+        size_t _strlen_F(const __FlashStringHelper *fstr) const 
+        {
+            return strlen_P(reinterpret_cast<PGM_P>(fstr));
+        }
+
         // findLength is optional, provide only if available
         int _indexOf(const char *find, size_t fromIndex, size_t findLength = ~0) const
         {
@@ -660,11 +661,14 @@ class String {
         int indexOf(const String &str) const;
         int indexOf(const String &str, unsigned int fromIndex) const;
 
-        int indexOf(const char *str, unsigned int fromIndex = 0) const {
-            return _indexOf(str, fromIndex, ~0U);
+        int indexOf(const char *str, unsigned int fromIndex = 0) const 
+        {
+            return _indexOf(str, fromIndex, strlen_P(str));
         }
-        int indexOf(const __FlashStringHelper *fstr, unsigned int fromIndex = 0) const {
-            return _indexOf_P(reinterpret_cast<PGM_P>(fstr), fromIndex, ~0U);
+
+        int indexOf(const __FlashStringHelper *fstr, unsigned int fromIndex = 0) const 
+        {
+            return _indexOf_P(reinterpret_cast<PGM_P>(fstr), fromIndex, _strlen_F(fstr));
         }
 
 
@@ -678,38 +682,49 @@ class String {
         }
 
 
-        int indexOfIgnoreCase(const char *str, unsigned int fromIndex = 0) const {
-            return _indexOfIgnoreCase(str, fromIndex, ~0U);
+        int indexOfIgnoreCase(const char *str, unsigned int fromIndex = 0) const 
+        {
+            return _indexOfIgnoreCase(str, fromIndex, strlen_P(str));
         }
-        int indexOfIgnoreCase(const String &str, unsigned int fromIndex = 0) const {
+
+        int indexOfIgnoreCase(const String &str, unsigned int fromIndex = 0) const 
+        {
             return _indexOfIgnoreCase(str.c_str(), fromIndex, str.length());
         }
-        int indexOfIgnoreCase(const __FlashStringHelper *fstr, unsigned int fromIndex = 0) const {
-            return _indexOfIgnoreCase_P(reinterpret_cast<PGM_P>(fstr), fromIndex, ~0U);
+
+        int indexOfIgnoreCase(const __FlashStringHelper *fstr, unsigned int fromIndex = 0) const 
+        {
+            return _indexOfIgnoreCase_P(reinterpret_cast<PGM_P>(fstr), fromIndex, _strlen_F(fstr));
         }
 
-
-        int lastIndexOf(char ch) const {
+        int lastIndexOf(char ch) const 
+        {
             return _lastIndexOf(ch);
         }
-        int lastIndexOf(char ch, unsigned int fromIndex) const {
+
+        int lastIndexOf(char ch, unsigned int fromIndex) const 
+        {
             return _lastIndexOf(ch, fromIndex);
         }
-        int lastIndexOf(const String &str) const {
-            auto strLen = str.length();
-            return _lastIndexOf(str.buffer(), length() - strLen, strLen);
+
+        int lastIndexOf(const String &str) const 
+        {
+            return _lastIndexOf(str.buffer(), length(), str.length());
         }
-        int lastIndexOf(const String &str, unsigned int fromIndex) const {
-            auto findLength = str.length();
-            return _lastIndexOf(str.buffer(), fromIndex - findLength, findLength);
+
+        int lastIndexOf(const String &str, unsigned int fromIndex) const 
+        {
+            return _lastIndexOf(str.buffer(), fromIndex, str.length());
         }
-        int lastIndexOf(const char *str, unsigned int fromIndex) const {
-            auto findLength = strlen(str);
-            return _lastIndexOf(str, fromIndex - findLength, findLength);
+
+        int lastIndexOf(const char *str, unsigned int fromIndex) const 
+        {
+            return _lastIndexOf(str, fromIndex, strlen_P(str));
         }
-        int lastIndexOf(const __FlashStringHelper *str, unsigned int fromIndex) const {
-            auto findLength = strlen_P(reinterpret_cast<PGM_P>(str));
-            return _lastIndexOf_P(reinterpret_cast<PGM_P>(str), fromIndex - findLength, findLength);
+
+        int lastIndexOf(const __FlashStringHelper *str, unsigned int fromIndex) const 
+        {
+            return _lastIndexOf_P(reinterpret_cast<PGM_P>(str), fromIndex, _strlen_F(str));
         }
 
 
@@ -723,32 +738,49 @@ class String {
 
     // public replace function with return type bool for success
     public:
-        inline bool replace(const char *find, const char *replace) {
+        inline bool replace(const char *find, const char *replace) 
+        {
             return _replace(find, strlen(find), replace, strlen(replace));
         }
-        inline bool replace(const char *find, const __FlashStringHelper *replace) {
-            return _replace(find, strlen(find), reinterpret_cast<PGM_P>(replace), strlen_P(reinterpret_cast<PGM_P>(replace)));
+
+        inline bool replace(const char *find, const __FlashStringHelper *replace) 
+        {
+            return _replace(find, strlen(find), reinterpret_cast<PGM_P>(replace), _strlen_F(replace));
         }
-        inline bool replace(const char *find, const String &replace) {
+
+        inline bool replace(const char *find, const String &replace) 
+        {
             return _replace(find, strlen(find), replace.buffer(), replace.length());
         }
-        inline bool replace(const String &find, const String &replace) {
+
+        inline bool replace(const String &find, const String &replace) 
+        {
             return _replace(find.buffer(), find.length(), replace.buffer(), replace.length());
         }
-        inline bool replace(const String &find, const char *replace) {
+
+        inline bool replace(const String &find, const char *replace) 
+        {
             return _replace(find.buffer(), find.length(), replace, strlen(replace));
         }
-        inline bool replace(const String &find, const __FlashStringHelper *replace) {
-            return _replace(find.buffer(), find.length(), reinterpret_cast<PGM_P>(replace), strlen_P(reinterpret_cast<PGM_P>(replace)));
+
+        inline bool replace(const String &find, const __FlashStringHelper *replace) 
+        {
+            return _replace(find.buffer(), find.length(), reinterpret_cast<PGM_P>(replace), _strlen_F(replace));
         }
-        inline bool replace(const __FlashStringHelper *find, const String &replace) {
-            return _replace(reinterpret_cast<PGM_P>(find), strlen_P(reinterpret_cast<PGM_P>(find)), replace.buffer(), replace.length());
+
+        inline bool replace(const __FlashStringHelper *find, const String &replace) 
+        {
+            return _replace(reinterpret_cast<PGM_P>(find), _strlen_F(find), replace.buffer(), replace.length());
         }
-        inline  bool replace(const __FlashStringHelper *find, const char *replace) {
-            return _replace(reinterpret_cast<PGM_P>(find), strlen_P(reinterpret_cast<PGM_P>(find)), replace, strlen(replace));
+
+        inline bool replace(const __FlashStringHelper *find, const char *replace) 
+        {
+            return _replace(reinterpret_cast<PGM_P>(find), _strlen_F(find), replace, strlen(replace));
         }
-        inline  bool replace(const __FlashStringHelper *find, const __FlashStringHelper *replace) {
-            return _replace(reinterpret_cast<PGM_P>(find), strlen_P(reinterpret_cast<PGM_P>(find)), reinterpret_cast<PGM_P>(replace), strlen_P(reinterpret_cast<PGM_P>(replace)));
+
+        inline  bool replace(const __FlashStringHelper *find, const __FlashStringHelper *replace) 
+        {
+            return _replace(reinterpret_cast<PGM_P>(find), _strlen_F(find), reinterpret_cast<PGM_P>(replace), _strlen_F(replace));
         }
 
     // new trim function internal methods
