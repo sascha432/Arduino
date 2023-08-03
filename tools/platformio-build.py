@@ -300,6 +300,18 @@ elif "PIO_FRAMEWORK_ARDUINO_MMU_CACHE16_IRAM48_SECHEAP_SHARED" in flatten_cppdef
         ("MMU_ICACHE_SIZE", "0x4000"),
         "MMU_IRAM_HEAP",
     ]
+elif "PIO_FRAMEWORK_ARDUINO_MMU_CACHE24_IRAM40_SECHEAP_SHARED" in flatten_cppdefines:
+    mmu_flags = [
+        ("MMU_IRAM_SIZE", "0xA000"),
+        ("MMU_ICACHE_SIZE", "0x6000"),
+        "MMU_IRAM_HEAP",
+    ]
+elif "PIO_FRAMEWORK_ARDUINO_MMU_CACHE28_IRAM36_SECHEAP_SHARED" in flatten_cppdefines:
+    mmu_flags = [
+        ("MMU_IRAM_SIZE", "0x9000"),
+        ("MMU_ICACHE_SIZE", "0x7000"),
+        "MMU_IRAM_HEAP",
+    ]
 elif "PIO_FRAMEWORK_ARDUINO_MMU_CACHE16_IRAM32_SECHEAP_NOTSHARED" in flatten_cppdefines:
     mmu_flags = [
         ("MMU_IRAM_SIZE", "0x8000"),
