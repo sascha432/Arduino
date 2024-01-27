@@ -541,7 +541,7 @@ class String {
         int _indexOf(const char *find, size_t fromIndex, size_t findLength = ~0) const
         {
             size_t len;
-            if (!find || !findLength || ((len = length()) == 0) || (findLength != ~0U && (fromIndex + findLength >= len))) {
+            if (!find || !findLength || ((len = length()) == 0) || (findLength != ~0U && (fromIndex + findLength > len))) {
                 return -1;
             }
             auto ptr = buffer();
@@ -555,7 +555,7 @@ class String {
         int _indexOfIgnoreCase(const char *find, size_t fromIndex, size_t findLength = ~0) const
         {
             size_t len;
-            if (!find || !findLength || ((len = length()) == 0) || (findLength != ~0U && (fromIndex + findLength >= len))) {
+            if (!find || !findLength || ((len = length()) == 0) || (findLength != ~0U && (fromIndex + findLength > len))) {
                 return -1;
             }
             auto ptr = buffer();
@@ -569,7 +569,7 @@ class String {
         int _indexOf_P(PGM_P find, size_t fromIndex, size_t findLength = ~0) const
         {
             size_t len;
-            if (!find || !findLength || ((len = length()) == 0) || (findLength != ~0U && (fromIndex + findLength >= len))) {
+            if (!find || !findLength || ((len = length()) == 0) || (findLength != ~0U && (fromIndex + findLength > len))) {
                 return -1;
             }
             auto ptr = buffer();
@@ -583,7 +583,7 @@ class String {
         int _indexOfIgnoreCase_P(PGM_P find, size_t fromIndex, size_t findLength) const
         {
             size_t len;
-            if (!find || !findLength || ((len = length()) == 0) || (fromIndex + findLength >= len)) {
+            if (!find || !findLength || ((len = length()) == 0) || (fromIndex + findLength > len)) {
                 return -1;
             }
             auto ptr = wbuffer();
