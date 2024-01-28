@@ -222,9 +222,24 @@ TEST_CASE("String comparison", "[core][String]")
     REQUIRE(!alpha.startsWith("I lick"));
     REQUIRE(alpha.startsWith("fish", 7));
     REQUIRE(!alpha.startsWith("fish?", 7));
+    REQUIRE(alpha.startsWithIgnoreCase("i like"));
+    REQUIRE(!alpha.startsWithIgnoreCase("i lick"));
+    REQUIRE(alpha.startsWithIgnoreCase("Fish", 7));
+    REQUIRE(!alpha.startsWithIgnoreCase("Fish?", 7));
     REQUIRE(alpha.endsWith("!"));
     REQUIRE(alpha.endsWith("fish!"));
     REQUIRE(!alpha.endsWith("sh?"));
+    REQUIRE(alpha.endsWithIgnoreCase("!"));
+    REQUIRE(alpha.endsWithIgnoreCase("Fish!"));
+    REQUIRE(!alpha.endsWithIgnoreCase("Sh?"));
+    alpha = F("Fish");
+    REQUIRE(alpha.endsWithIgnoreCase("H"));
+    REQUIRE(alpha.endsWithIgnoreCase("h"));
+    REQUIRE(!alpha.endsWithIgnoreCase("j"));
+    alpha = String();
+    REQUIRE(alpha == "");
+    REQUIRE(alpha == F(""));
+    REQUIRE(alpha == String());
 }
 
 TEST_CASE("String byte access", "[core][String]")
@@ -776,34 +791,12 @@ TEST_CASE("String::equals", "[core][String]")
     }
 
     {
-        String str = F("Hello");
-        REQUIRE(str.equals(str));
-    }
-
-    {
-        String str1 = "";
-        String str2 = "";
-        REQUIRE(str1.equals(str2));
-    }    
-
-    {
-        String str = F("Hello");
-        REQUIRE(str.equals("Hello"));
-    }
-
-    {
-        String str = F("Hello");
-        REQUIRE_FALSE(str.equals("World"));
-    }
-
-    {
         String str = "";
         REQUIRE(str.equals(""));
-    }
-
-    {
-        String str = "";
+        REQUIRE(str.equals(F("")));
+        REQUIRE(str.equals(String()));
         REQUIRE_FALSE(str.equals("Hello"));
+        REQUIRE_FALSE(str.equals(F("Hello")));
     }
 
     {
@@ -816,15 +809,61 @@ TEST_CASE("String::equals", "[core][String]")
         String str = F("Hello");
         auto fStr = F("World");
         REQUIRE_FALSE(str.equals(fStr));
+        REQUIRE_FALSE(str.equals(""));
+    }
+}
+
+TEST_CASE("String::equalsIgnoreCase", "[core][String]")
+{
+    {
+        String str = "Hello";
+        REQUIRE(str.equalsIgnoreCase("HELLO"));
+    }
+
+    {
+        String str = "Hello";
+        REQUIRE_FALSE(str.equalsIgnoreCase("WORLD"));
     }
 
     {
         String str = "";
-        auto fStr = F("Hello");
-        REQUIRE_FALSE(str.equals(fStr));
+        REQUIRE(str.equalsIgnoreCase(""));
+        REQUIRE(str.equalsIgnoreCase(F("")));
+        REQUIRE(str.equalsIgnoreCase(String()));
+        REQUIRE_FALSE(str.equalsIgnoreCase("HELLO"));
     }
 }
 
+TEST_CASE("String::indexOf", "[core][String]")
+{
+    {
+        String str = F("Hello");
+        REQUIRE(str.indexOf('H') == 0);
+        REQUIRE(str.indexOf('o') == 4);
+        REQUIRE(str.indexOf('O') == -1);
+        REQUIRE(str.indexOf('z') == -1);
+    }
+
+    {
+        String str = "Hello, Hello";
+        REQUIRE(str.indexOf('H', 6) == 7);
+        REQUIRE(str.indexOf('z', 6) == -1);
+    }
+
+    {
+        String str = "Hello, Hello";
+        auto fStr = F("Hello");
+        REQUIRE(str.indexOf(fStr) == 0);
+        auto fStr2 = F("World");
+        REQUIRE(str.indexOf(fStr2) == -1);
+    }
+
+    {
+        String str = F("Hello, World!");
+        auto fStr = F("World!");
+        REQUIRE(str.indexOf(fStr) == 7);
+    }
+}
 TEST_CASE("String::indexOfIgnoreCase", "[core][String]")
 {
     {
@@ -874,16 +913,16 @@ TEST_CASE("String::indexOfIgnoreCase", "[core][String]")
 TEST_CASE("String::lastIndexOf", "[core][String]")
 {
     {
-        String str = F("Hello");
-        REQUIRE(str.lastIndexOf('H') == 0);
+        String str = "Hello";
         REQUIRE(str.lastIndexOf('o') == 4);
+        REQUIRE(str.lastIndexOf('O') == -1);
         REQUIRE(str.lastIndexOf('z') == -1);
     }
 
     {
         String str = "Hello, Hello";
-        REQUIRE(str.lastIndexOf('H', 6) == 0);
         REQUIRE(str.lastIndexOf('H') == 7);
-        REQUIRE(str.lastIndexOf('z', 6) == -1);
+        REQUIRE(str.lastIndexOf('H', 5) == 0);
+        REQUIRE(str.lastIndexOf('z', 5) == -1);
     }
 }

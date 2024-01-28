@@ -372,26 +372,24 @@ class String {
         //
 
         unsigned char equalsIgnoreCase(const String &str, size_t offset = 0) const {
-            if (offset == 0 && this == &str) {
+            if (this == &str) {
                 return true;
             }
-            size_t len1;
-            size_t len2;
-            if (((len1 = length()) == 0) || (offset >= len1) || ((len2 = str.length()) == 0) || ((len1 + offset) != len2)) {
+            if (offset > length()) {
                 return false;
             }
             return strcasecmp(buffer() + offset, str.c_str()) == 0;
         }
 
         unsigned char equalsIgnoreCase(const char *cStr, size_t offset = 0) const {
-            if (!cStr || !*cStr || offset >= length()) {
+            if (!cStr || offset > length()) {
                 return false;
             }
             return strcasecmp(buffer() + offset, cStr) == 0;
         }
 
         unsigned char equalsIgnoreCase(const __FlashStringHelper *fStr, size_t offset = 0) const {
-            if (!fStr || offset >= length()) {
+            if (!fStr || offset > length()) {
                 return false;
             }
             return strcasecmp_P(buffer() + offset, reinterpret_cast<PGM_P>(fStr)) == 0;
